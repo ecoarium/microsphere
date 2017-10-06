@@ -1,0 +1,5 @@
+
+cookbook 'timezone-ii'
+cookbook 'ntp'
+
+cookbook_from_git 'chef_commons', '1.1.20'

@@ -1,0 +1,160 @@
+
+Vagrant::Project.configure(:virtualbox) do |env|
+
+  merge_data_bags unless local_env_data_bags_uptodate?
+  server_data_bag = get_data_bag('servers', local_env_data_bags_path)
+
+  # monitor :monitor do
+  #   provider {
+  #     network{
+  #       ip_address server_data_bag[:monitor][:ip]
+  #     }
+
+  #     memory '2048'
+  #   }
+
+  #   vagrant_machine.vm.provision "chef_solo_#{vagrant_machine.name}", type: 'chef_solo' do |chef|
+  #     chef.data_bags_path = File.expand_path('.vagrant/data_bags', File.dirname(__FILE__)), true
+  #   end
+  # end
+  #
+  # nexus :nexus do
+  #   provider {
+  #     network{
+  #       ip_address server_data_bag[:nexus][:ip]
+  #     }
+  #   }
+  #
+  #   vagrant_machine.vm.provision "chef_solo_#{vagrant_machine.name}", type: 'chef_solo' do |chef|
+  #     chef.data_bags_path = File.expand_path('.vagrant/data_bags', File.dirname(__FILE__)), true
+  #   end
+  # end
+
+  yum :yum do
+    provider {
+      network{
+        ip_address server_data_bag[:yum][:ip]
+      }
+    }
+
+    vagrant_machine.vm.provision "chef_solo_#{vagrant_machine.name}", type: 'chef_solo' do |chef|
+      chef.data_bags_path = File.expand_path('.vagrant/data_bags', File.dirname(__FILE__)), true
+    end
+  end
+
+  # jenkins_slave_windows :windows_slave do
+  #   vagrant_machine.vm.guest = :windows
+  #   provider {
+  #     network{
+  #       ip_address server_data_bag[:"jenkins-slave-win64"][:ip]
+  #     }
+  #   }
+
+  #   vagrant_machine.vm.provision "chef_solo_#{vagrant_machine.name}", type: 'chef_solo' do |chef|
+  #     chef.data_bags_path = File.expand_path('.vagrant/data_bags', File.dirname(__FILE__)), true
+  #   end
+
+  #   name 'windows-slave'
+  #   labels 'windows-slave'
+  #   executors 1
+  #   usage_mode 'exclusive'
+  # end
+
+  jenkins :jenkins do
+
+    provider {
+      network{
+        ip_address server_data_bag[:jenkins][:ip]
+      }
+    }
+
+    vagrant_machine.vm.provision "chef_solo_#{vagrant_machine.name}", type: 'chef_solo' do |chef|
+      chef.data_bags_path = File.expand_path('.vagrant/data_bags', File.dirname(__FILE__)), true
+    end
+
+    config {
+      self[:server] = {
+        data_bag: 'servers',
+        data_bag_item: 'jenkins'
+      }
+      self[:home] = '/var/lib/jenkins'
+    }
+  end
+  #
+  # jenkins_slave_centos :jenkins_slave do
+  #   vagrant_machine.vm.provision "chef_solo_#{vagrant_machine.name}", type: 'chef_solo' do |chef|
+  #     chef.data_bags_path = File.expand_path('.vagrant/data_bags', File.dirname(__FILE__)), true
+  #   end
+  #
+  #   provider {
+  #     network{
+  #       ip_address server_data_bag[:"jenkins-slave-centos"][:ip]
+  #     }
+  #   }
+  #
+  #   name 'centos-slave'
+  #   labels 'centos-slave'
+  #   executors 2
+  #   usage_mode 'exclusive'
+  #
+  # end
+
+  # jenkins_slave_osx :jenkins_slave_osx do
+  #   vagrant_machine.vm.provision "chef_solo_#{vagrant_machine.name}", type: 'chef_solo' do |chef|
+  #     chef.data_bags_path = File.expand_path('.vagrant/data_bags', File.dirname(__FILE__)), true
+  #   end
+
+  #   provider {
+  #     artifact_name = $WORKSPACE_SETTINGS[:vagrant][:boxes][:osx][:name]
+  #     artifact_version = $WORKSPACE_SETTINGS[:vagrant][:boxes][:osx][:version]
+  #     box_from_nexus(artifact_name, artifact_version)
+
+  #     network{
+  #       ip_address server_data_bag[:"jenkins-slave-osx"][:ip]
+  #     }
+  #   }
+
+  #   name 'osx-slave'
+  #   labels 'osx-slave'
+  #   executors 2
+  #   usage_mode 'exclusive'
+
+  # end
+
+  # dns :dns_master do
+
+  # 	provider {
+  #     network{
+  #       ip_address "10.6.7.100"
+  #     }
+  #   }
+
+  #   set_as_master
+
+  #   name_servers 'dns_master'
+  #   name_servers 'dns_slave'
+
+  #   vagrant_machine.vm.provision "chef_solo_#{vagrant_machine.name}", type: 'chef_solo' do |chef|
+  #     chef.data_bags_path = File.expand_path('master_zone_data_bags', File.dirname(__FILE__)), true
+  #   end
+  # end
+
+  # dns :dns_slave do
+  #
+  #   provider {
+  #     network{
+  #       ip_address server_data_bag[:dns_master][:ip]
+  #     }
+  #   }
+  #
+  #   set_as_slave
+  #
+  #   name_servers 'dns_master'
+  #   name_servers 'dns_slave'
+  #
+  #   vagrant_machine.vm.provision "chef_solo_#{vagrant_machine.name}", type: 'chef_solo' do |chef|
+  #     chef.data_bags_path = File.expand_path('master_zone_data_bags', File.dirname(__FILE__)), true
+  #   end
+  # end
+
+end

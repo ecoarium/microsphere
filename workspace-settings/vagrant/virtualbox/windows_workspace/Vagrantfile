@@ -1,0 +1,17 @@
+
+Vagrant::Project.configure(:workspace) do |env|
+  windows_workspace :windows_workspace do
+
+    provider{
+      network{
+        ip_address "10.4.83.4"
+      }
+
+      gui true
+    }
+
+    vagrant_machine.winrm.username = 'IEUser'
+    vagrant_machine.winrm.password = 'Passw0rd!'
+
+  end
+end

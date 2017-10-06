@@ -1,0 +1,68 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "md5",
+      "vm_name": "{{user `vm_short_name`}}-{{user `artifact_version`}}",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_wait_timeout": "10000s",
+      "http_directory": "http",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort}}/ks.cfg<enter>"
+      ],
+      "disk_size": 30720,
+      "hard_drive_interface": "sata",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "guest_os_type": "RedHat_64",
+      "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+      "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "512" ],
+        [ "modifyvm", "{{.Name}}", "--cpus", "1" ]
+      ],
+      "output_directory": "{{user `output_directory`}}/virtualbox",
+      "headless": true
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "output": "{{user `box_output_directory`}}/{{.Provider}}/{{user `vm_short_name`}}-{{user `artifact_version`}}.box",
+      "only": ["virtualbox-iso"]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "environment_vars": [
+        "INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
+        "SSH_USERNAME={{user `ssh_username`}}",
+        "SSH_PASSWORD={{user `ssh_password`}}"
+      ],
+      "script": [
+        "{{user `scripts_directory_path`}}/virtualbox.sh",
+        "{{user `scripts_directory_path`}}/vagrant.sh",
+        "{{user `scripts_directory_path`}}/fix-slow-dns.sh",
+        "{{user `scripts_directory_path`}}/sshd.sh",
+        "{{user `scripts_directory_path`}}/ecoarium.sh",
+        "{{user `scripts_directory_path`}}/vagrant-networking.sh",
+        "{{user `scripts_directory_path`}}/cleanup.sh"
+      ]
+    }
+  ],
+  "variables": {
+    "install_vagrant_key": "true",
+    "ssh_password": "vagrant",
+    "ssh_username": "vagrant",
+    "artifact_version": null,
+    "vm_short_name": null,
+    "iso_checksum": null,
+    "iso_url": null,
+    "scripts_directory_path": null,
+    "box_output_directory": null,
+    "output_directory": null
+  }
+}

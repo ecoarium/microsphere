@@ -1,0 +1,24 @@
+
+##################################################################
+#                                                                #
+#     Ignore everything below the folder .vagrant except for:    #
+#                                                                #
+#        * .vagrant/machines/*/aws/id                            #
+#                                                                #
+#                                                                #
+#    These are vagrant's state files and authentication keys     #
+#    to the virtual machines deployed in aws. If we lose         #
+#    them how would we get back in the virtual machines?         #
+#                                                                #
+##################################################################
+
+!**/.vagrant/
+**/.vagrant/*.*
+
+!**/.vagrant/machines/*/
+**/.vagrant/machines/*/*
+
+!**/.vagrant/machines/*/aws/
+**/.vagrant/machines/*/aws/*
+
+!**/.vagrant/machines/*/aws/id

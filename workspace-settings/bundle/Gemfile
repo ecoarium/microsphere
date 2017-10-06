@@ -1,0 +1,2 @@
+file_path = ENV['ECOSYSTEM_BUNDLE_GEMFILE']
+self.instance_eval(File.read(file_path), file_path, 1)

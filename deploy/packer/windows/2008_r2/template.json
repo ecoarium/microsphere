@@ -1,0 +1,68 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "headless": false,
+      "boot_wait": "2m",
+      "vm_name": "{{user `vm_short_name`}}-{{user `artifact_version`}}",
+      "communicator": "winrm",
+      "winrm_password": "{{ user `winrm_password` }}",
+      "winrm_username": "{{ user `winrm_username` }}",
+      "winrm_timeout": "2h",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "guest_os_type": "Windows2008_64",
+      "guest_additions_mode": "attach",
+      "disk_size": 61440,
+      "floppy_files": [
+        "{{user `autounattend`}}",
+        "./scripts/dis-updates.ps1",
+        "./scripts/oracle-cert.cer",
+        "./scripts/windows-setup.bash",
+        "./scripts/during-os-install.cmd"
+      ],
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "2048"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "2"
+        ]
+      ],
+      "output_directory": "{{user `output_directory`}}/virtualbox"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "windows-shell",
+      "scripts": [
+        "./scripts/vm-guest-tools.bat",
+        "./scripts/enable-rdp.bat",
+        "./scripts/windows-setup.cmd",
+        "./scripts/compact.bat"
+      ]
+    }
+  ],
+  "variables": {
+    "install_vagrant_key": "true",
+    "winrm_password": "vagrant",
+    "winrm_username": "vagrant",
+    "artifact_version": null,
+    "vm_short_name": null,
+    "iso_checksum_type": null,
+    "iso_checksum": null,
+    "iso_url": null,
+    "scripts_directory_path": null,
+    "box_output_directory": null,
+    "output_directory": null,
+    "autounattend": null
+  }
+}

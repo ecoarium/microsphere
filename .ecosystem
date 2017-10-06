@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+cd "$(dirname ${BASH_SOURCE[0]})"
+
+export PROJECT_NAME='microsphere'
+export COMPANY_NAME='github'
+export ORGANIZATION_NAME='ecoarium'
+export DOMAIN_NAME='github.com'
+export ECOSYSTEM_VERSION="${ECOSYSTEM_VERSION:=next}"
+export ECOSYSTEM_VERSION_TYPE="${ECOSYSTEM_VERSION_TYPE:=branch}"
+
+#<(((((((((((((((-------------------------------------------------------------------)))))))))))))))>#
+#<(((((((((((((((------------------- PLEASE DON'T EDIT BELOW -----------------------)))))))))))))))>#
+
+if [[ "${ECOSYSTEM_VERSION_TYPE}" != 'tag' && "${ECOSYSTEM_VERSION_TYPE}" != 'branch' ]]; then
+  >&2 echo "
+the env var ECOSYSTEM_VERSION_TYPE is set to '${ECOSYSTEM_VERSION_TYPE}'
+valid values are:
+  * tag
+  * branch
+"
+  kill -s INT $$
+fi
+
+export PATHS_PROJECTS_ROOT="${HOME}/Projects"
+export PATHS_COMPANY_HOME="${PATHS_PROJECTS_ROOT}/$COMPANY_NAME"
+export PATHS_ORGANIZATION_HOME="${PATHS_COMPANY_HOME}/$ORGANIZATION_NAME"
+
+export ECOSYSTEM_PATHS_PARENT_HOME='/usr/local'
+export ECOSYSTEM_NAME='ecosystem'
+export ECOSYSTEM_PATHS_HOME="${ECOSYSTEM_PATHS_PARENT_HOME}/${ECOSYSTEM_NAME}-${ECOSYSTEM_VERSION}"
+
+if [[ -z "$USER" ]]; then
+  if [[ -n "$JENKINS_HOME" ]]; then
+    export USER=jenkins
+    export LOGNAME=$USER
+  else
+    >&2 echo "the environment variable USER is not set, this is required!"
+    kill -s INT $$
+  fi
+fi
+
+case "$(uname -s)" in
+  Darwin)
+    #nada
+    ;;
+  Linux)
+    #nada
+    ;;
+  *)
+    function sudo(){
+      local command="$@"
+
+      if [[ "$command" =~ -E ]]; then
+        command=''
+      fi
+
+      if [[ -z "$command" && ! -t 0 ]]; then
+        local IFS=
+        local data=''
+        while read data ; do
+          command="$command
+$data"
+        done
+      fi
+
+      command="
+export SUDO_USER=$USER
+$command"
+
+      eval "$command"
+    }
+    ;;
+esac
+
+if [[ ! -e "${ECOSYSTEM_PATHS_HOME}/.git" ]]; then
+  if [[ "${ECOSYSTEM_VERSION_TYPE}" == 'branch' ]]; then
+
+    if [[ ! -e "${PATHS_ORGANIZATION_HOME}" ]]; then
+      mkdir "${PATHS_ORGANIZATION_HOME}"
+    fi
+
+    cd "${PATHS_ORGANIZATION_HOME}"
+
+      git clone https://github.com/ecoarium/ecosystem.git
+
+      git checkout tags/"${ECOSYSTEM_VERSION}"
+      if [[ $? != 0 ]]; then
+        git checkout "${ECOSYSTEM_VERSION}"
+      fi
+
+      sudo ln -s "${PATHS_ORGANIZATION_HOME}/ecosystem" "${ECOSYSTEM_PATHS_HOME}"
+
+    cd $OLDPWD
+
+  else
+
+    cd "${ECOSYSTEM_PATHS_PARENT_HOME}"
+
+      sudo mkdir "${ECOSYSTEM_PATHS_HOME}"
+      sudo chown $USER "${ECOSYSTEM_PATHS_HOME}"
+
+      git clone https://github.com/ecoarium/ecosystem.git "${ECOSYSTEM_PATHS_HOME}"
+
+    cd $OLDPWD
+    cd "${ECOSYSTEM_PATHS_HOME}"
+
+      git checkout tags/"${ECOSYSTEM_VERSION}"
+      if [[ $? != 0 ]]; then
+        git checkout "${ECOSYSTEM_VERSION}"
+      fi
+
+    cd $OLDPWD
+
+  fi
+fi
+
+export ECOSYSTEM_PATHS_SHELL_HOME="${ECOSYSTEM_PATHS_HOME}/shell"
+export ECOSYSTEM_PATHS_SHELL_LIB_HOME="${ECOSYSTEM_PATHS_SHELL_HOME}/lib"
+export ECOSYSTEM_PATHS_SHELL_LIB_CONTROL_HOME="${ECOSYSTEM_PATHS_SHELL_LIB_HOME}/control"
+
+source "${ECOSYSTEM_PATHS_SHELL_LIB_CONTROL_HOME}/bootstrap.bash"
+
+
+cd "${ECOSYSTEM_PATHS_HOME}"
+if ! git branch | grep '\*' | grep -q detached ; then
+  warn "
+#####################################################################################################
+                      WARNING ECOSYSTEM IS ON A BRANCH NOT A SPECIFIC VERSION(TAG)
+                    YOUR WARRANTY IS VOID, IE YOUR ARE ON YOUR OWN WITHOUT SUPPORT
+#####################################################################################################
+"
+fi
+cd "${PATHS_PROJECT_HOME}"
