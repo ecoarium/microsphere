@@ -8,8 +8,3 @@ version          '1.0.0'
 depends 'chef_commons'
 depends 'virtualbox'
 depends 'ark'
-
-depends 'java'
-depends 'java-windows'
-
-depends 'gradle'

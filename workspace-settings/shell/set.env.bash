@@ -7,7 +7,6 @@ export GROUP_ID_BASE='com.jayflowers'
 export ARTIFACT_ID_BASE='microsphere'
 
 export RUBY_VERSION=2.2.4
-
 export BUNDLER_VERSION=1.7.12
 
 export PATH=/usr/local/packer:$PATH
@@ -76,12 +75,12 @@ function resign_as_data_bag_manager(){
   export HATS=${HATS/:data_bag/}
 }
 
-function become_middle_way_cookbook_developer(){
+function become_ecoarium_cookbook_developer(){
   become_github_manager
   export HATS=$HATS:ecoarium-cookbooks
 }
 
-function resign_as_middle_way_cookbook_developer(){
+function resign_as_ecoarium_cookbook_developer(){
   resign_from_github_management
   export HATS=${HATS/:ecoarium-cookbooks/}
 }

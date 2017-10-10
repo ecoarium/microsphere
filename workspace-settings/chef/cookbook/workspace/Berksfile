@@ -2,9 +2,6 @@ load_berks_file($WORKSPACE_SETTINGS[:ecosystem][:chef][:berksfile])
 
 ecoarium_cookbook 'virtualbox', '0.8.11'
 ecoarium_cookbook 'chef_commons', '1.1.20'
-ecoarium_cookbook 'java-windows', '1.0.0'
-ecoarium_cookbook 'gradle', '0.1.4'
 
 cookbook 'build-essential'
 cookbook 'ark'
-cookbook 'java'
