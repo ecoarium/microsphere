@@ -1,0 +1,22 @@
+require "#{$WORKSPACE_SETTINGS[:paths][:project][:home]}/.rake/lib/classes/packer/baseline_creator.rb"
+
+Packer::BaselineCreator.new.process_template
+
+Vagrant::Project.configure(:blank_virtualbox) do |env|
+  blank :"#{$WORKSPACE_SETTINGS[:packer][:context].gsub(/\//, '-')}" do
+
+      provider {
+        gui true
+      }
+    vagrant_machine.vm.communicator = "winrm"
+    vagrant_machine.vm.guest = :windows
+    vagrant_machine.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true
+    vagrant_machine.winrm.password = 'vagrant'
+    
+    unless $WORKSPACE_SETTINGS[:paths][:project_paths_packer_virtualbox_box_file].nil?
+      vagrant_machine.vm.box = File.basename($WORKSPACE_SETTINGS[:paths][:project_paths_packer_virtualbox_box_file], '.box')
+      vagrant_machine.vm.box_url = $WORKSPACE_SETTINGS[:paths][:project_paths_packer_virtualbox_box_file]
+    end
+    
+  end
+end

@@ -68,7 +68,7 @@ function set_workspace_settings_to_packer() {
 
   change_packer_settings
 
-  export VAGRANT_DEFAULT_PROVIDER=virtualbox
+  export VAGRANT_DEFAULT_PROVIDER=aws
   export VAGRANT_CONTEXT="${VAGRANT_DEFAULT_PROVIDER}/packer/${PACKER_CONTEXT}"
 
   export TEST_TYPES=packer

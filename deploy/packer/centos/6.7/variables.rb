@@ -1,14 +1,18 @@
 
 ####################### BEGIN GENERATED CONTENT DONT CHANGE #######################
-# []
+# [c2f3953cddbc42b25a7cbf4e282d60fe]
 ######################## END GENERATED CONTENT DONT CHANGE ########################
 
 # Any string value of 'null' below must be set to a new value.
 
+require 'vagrant/project/provider/amazon/helper'
 require 'curl'
 require 'digest/md5'
 require 'open-uri'
 require 'git'
+
+access_key Vagrant::Project::Provider::Amazon::Helper.get_aws_credential['aws_access_key_id']
+secret_key Vagrant::Project::Provider::Amazon::Helper.get_aws_credential['aws_secret_access_key']
 
 install_vagrant_key 'true'
 ssh_password 'vagrant'
@@ -41,4 +45,5 @@ if !File.exist?(iso_url) or Digest::MD5.file(iso_url).hexdigest != iso_checksum
   Curl.large_download(remote_iso_url, iso_url)
 end
 
+$WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:aws][:ami] = "ami-#{vm_short_name}-#{artifact_version}"
 $WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:virtualbox][:box][:file] = "#{box_output_directory}/virtualbox/#{vm_short_name}-#{artifact_version}.box"

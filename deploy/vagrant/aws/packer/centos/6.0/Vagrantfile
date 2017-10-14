@@ -1,0 +1,25 @@
+require "#{$WORKSPACE_SETTINGS[:paths][:project][:workspace][:settings][:rake][:lib][:classes][:home]}/packer/baseline_creator.rb"
+
+Packer::BaselineCreator.new.process_template
+
+Vagrant::Project.configure(:blank) do |env|
+  blank :"#{$WORKSPACE_SETTINGS[:packer][:context].gsub(/\//, '-')}" do
+
+    if ENV['PACKER_BOX_DESKTOP']
+      provider {
+        gui true
+      }
+    end
+
+    provider {
+      network {
+        ip_address '10.6.11.100'
+      }
+
+      unless $WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:virtualbox][:box][:file].nil?
+        box File.basename($WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:virtualbox][:box][:file], '.box')
+        box_url $WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:virtualbox][:box][:file]
+      end
+    }
+  end
+end

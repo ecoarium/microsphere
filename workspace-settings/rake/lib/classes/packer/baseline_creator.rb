@@ -20,6 +20,8 @@ module Packer
       $WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:virtualbox] = {}
       $WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:virtualbox][:box] = {}
 
+      $WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:aws] = {}
+      
       @build_directory = "#{$WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:context][:path]}/.build"
 
       FileUtils.mkdir_p(@build_directory) unless File.exist?(@build_directory)
