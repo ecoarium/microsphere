@@ -5,14 +5,14 @@ require 'github'
 require 'terminal-helper/ask'
 
 desc "create new cookbook"
-task :create_new_middle_way_cookbook, :cookbook_name do |t, args|
+task :create_new_ecoarium_cookbook, :cookbook_name do |t, args|
   cookbook_name = args[:cookbook_name]
   organization_name = 'ecoarium-cookbooks'
   team_name = 'devops-ecoarium-cookbooks'
 
   workspace = File.expand_path("github/#{organization_name}", $WORKSPACE_SETTINGS[:paths][:projects][:root])
 
-  ensure_repo_exist(cookbook_name, organization_name, team_name)
+  # ensure_repo_exist(cookbook_name, organization_name, team_name)
 
   shell_command! "knife cookbook create #{cookbook_name} --cookbook-path #{workspace}"
 
