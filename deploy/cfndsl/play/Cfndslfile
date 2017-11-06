@@ -1,0 +1,113 @@
+CloudFormation do
+  Description('Networking Setup')
+  AWSTemplateFormatVersion('2010-09-09')
+
+  Resource('VPC') do
+    Type('AWS::EC2::VPC')
+    Property('CidrBlock', '10.0.0.0/16')
+    Property('InstanceTenancy', 'default')
+    Property('EnableDnsSupport', 'true')
+    Property('EnableDnsHostnames', 'true')
+
+    add_stack_id_tag
+  end
+
+  Resource('Subnet') do
+    Type('AWS::EC2::Subnet')
+    Property('VpcId', Ref('VPC'))
+    Property('CidrBlock', '10.0.0.0/24')
+
+    add_stack_id_tag
+  end
+
+  Resource('InternetGateway') do
+    Type('AWS::EC2::InternetGateway')
+
+    add_stack_id_tag
+  end
+
+  Resource('AttachGateway') do
+    Type('AWS::EC2::VPCGatewayAttachment')
+    Property('VpcId', Ref('VPC'))
+    Property('InternetGatewayId', Ref('InternetGateway'))
+  end
+
+  Resource('RouteTable') do
+    Type('AWS::EC2::RouteTable')
+    Property('VpcId', Ref('VPC'))
+
+    add_stack_id_tag
+  end
+
+  Resource('Route') do
+    Type('AWS::EC2::Route')
+    DependsOn('AttachGateway')
+    Property('RouteTableId', Ref('RouteTable'))
+    Property('DestinationCidrBlock', '0.0.0.0/0')
+    Property('GatewayId', Ref('InternetGateway'))
+  end
+
+  Resource('SubnetRouteTableAssociation') do
+    Type('AWS::EC2::SubnetRouteTableAssociation')
+    Property('SubnetId', Ref('Subnet'))
+    Property('RouteTableId', Ref('RouteTable'))
+  end
+
+  Resource('NetworkAcl') do
+    Type('AWS::EC2::NetworkAcl')
+    Property('VpcId', Ref('VPC'))
+
+    add_stack_id_tag
+  end
+
+  Resource('OutBoundNetworkAclEntry') do
+    Type('AWS::EC2::NetworkAclEntry')
+    Property('NetworkAclId', Ref('NetworkAcl'))
+    Property('CidrBlock', '0.0.0.0/0')
+    Property('Egress', 'true')
+    Property('Protocol', '-1')
+    Property('RuleAction', 'allow')
+    Property('RuleNumber', '100')
+  end
+
+  Resource('InboundSSHNetworkAclEntry') do
+    Type('AWS::EC2::NetworkAclEntry')
+    Property('NetworkAclId', Ref('NetworkAcl'))
+    Property('RuleNumber', '101')
+    Property('Protocol', '6')
+    Property('RuleAction', 'allow')
+    Property('Egress', 'false')
+    Property('CidrBlock', '0.0.0.0/0')
+    Property(
+      'PortRange', {
+        'From' => '22',
+        'To'   => '22'
+      }
+    )
+  end
+
+
+  Resource('SubnetNetworkAclAssociation') do
+    Type('AWS::EC2::SubnetNetworkAclAssociation')
+    Property('SubnetId', Ref('Subnet'))
+    Property('NetworkAclId', Ref('NetworkAcl'))
+  end
+
+  Resource('SSHSecurityGroup') do
+    Type('AWS::EC2::SecurityGroup')
+    Property('VpcId', Ref('VPC'))
+    Property('GroupDescription', 'ssh')
+    Property(
+      'SecurityGroupIngress',
+      [{
+        'CidrIp'     => '0.0.0.0/0',
+        'FromPort'   => '22',
+        'IpProtocol' => 'tcp',
+        'ToPort'     => '22'
+      }]
+    )
+
+    add_stack_id_tag
+  end
+
+end

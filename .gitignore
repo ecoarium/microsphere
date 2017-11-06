@@ -24,3 +24,4 @@ Thumbs.db
 # vim
 .swp
 set.personal.env.bash
+deploy/cfndsl/play/.cfndsl
