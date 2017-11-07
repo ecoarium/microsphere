@@ -7,13 +7,9 @@ CloudFormation do
     EnableDnsHostnames true
     InstanceTenancy 'default'
     CidrBlock '10.0.0.0/24'
-
-    add_stack_id_tag
   end
 
-  InternetGateway(:InternetGateway) do
-    add_stack_id_tag
-  end
+  InternetGateway(:InternetGateway)
 
   VPCGatewayAttachment(:GatewayToInternet) do
     VpcId Ref(:VPC)
@@ -23,12 +19,10 @@ CloudFormation do
   Subnet(:Subnet) do
     VpcId Ref(:VPC)
     CidrBlock '10.0.0.0/24'
-    add_stack_id_tag
   end
 
   RouteTable(:RouteTable) do
     VpcId Ref(:VPC)
-    add_stack_id_tag
   end
 
   SubnetRouteTableAssociation(:SubnetRouteTableAssociation) do
@@ -45,7 +39,6 @@ CloudFormation do
 
   NetworkAcl(:NetworkAcl) do
     VpcId Ref(:VPC)
-    add_stack_id_tag
   end
 
   NetworkAclEntry(:OutBoundNetworkAclEntry) do
@@ -87,8 +80,6 @@ CloudFormation do
         ToPort:     22
       }
     ]
-
-    add_stack_id_tag
   end
 
 end
