@@ -5,8 +5,8 @@ require 'json'
 require 'yaml'
 
 CfnDsl::RakeTask.new('cfndsl_generate_template') do |t|
-  FileUtils.mkdir_p $WORKSPACE_SETTINGS[:paths][:project][:deploy][:cfndsl][:state] unless File.exist?($WORKSPACE_SETTINGS[:paths][:project][:deploy][:cfndsl][:state])
-  
+  require 'opt/cfndsl'
+
   t.cfndsl_opts = {
     verbose: true,
     files: [{
@@ -16,11 +16,44 @@ CfnDsl::RakeTask.new('cfndsl_generate_template') do |t|
   }
 end
 
+task :cfndsl_outputs do
+  name = CfndslExt::Tagging.generate_name
+  stack = CfndslExt::CloudFormation::Stack.new(
+    name,
+    {
+      region: 'us-east-2',
+      access_key_id: credentials[:key],
+      secret_access_key: credentials[:secret]
+    }
+  )
+
+  puts stack.outputs.pretty_inspect
+end
+
+desc "destroy cfn stack"
+task :cfndsl_destroy do
+  name = CfndslExt::Tagging.generate_name
+
+  stack = CfndslExt::CloudFormation::Stack.new(
+    name,
+    {
+      region: 'us-east-2',
+      access_key_id: credentials[:key],
+      secret_access_key: credentials[:secret]
+    }
+  )
+
+  if stack.exists?
+    stack.delete
+  else
+    raise "the stack #{name} does not exist"
+  end
+end
+
 desc "deploy cfn file"
 task :cfndsl_deploy => [:cfndsl_generate_template] do
-    name = 'dev'
-    todo "need to create a menaingful name for the stack, remember that these will be made from all team member workspaces...", "11/15/2017 02:00 PM"
-    tags = CfndslExt::Tagging.generate_tags(name: name)
+    tags = CfndslExt::Tagging.generate_tags
+    name = CfndslExt::Tagging.generate_name
 
     stack = CfndslExt::CloudFormation::Stack.new(
       name,
