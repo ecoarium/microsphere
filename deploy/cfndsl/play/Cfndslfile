@@ -2,11 +2,41 @@ CloudFormation do
   Description('Networking Setup')
   AWSTemplateFormatVersion('2010-09-09')
 
+  vpc_cidr_block = '10.0.0.0/24'
+  subnet_cidr_block = '10.0.0.0/24'
+
+  port_security = {
+    ssh: {
+      port_range: {
+        from: 22,
+        to: 22
+      },
+      protocol: 'tcp',
+      cidr_block: '0.0.0.0/0'
+    },
+    rdp: {
+      port_range: {
+        from: 3389,
+        to: 3389
+      },
+      protocol: 'tcp',
+      cidr_block: '0.0.0.0/0'
+    },
+    winrm: {
+      port_range: {
+        from: 5985,
+        to: 5986
+      },
+      protocol: 'tcp',
+      cidr_block: '0.0.0.0/0'
+    }
+  }
+
   VPC(:VPC) do
     EnableDnsSupport true
     EnableDnsHostnames true
     InstanceTenancy 'default'
-    CidrBlock '10.0.0.0/24'
+    CidrBlock vpc_cidr_block
   end
 
   InternetGateway(:InternetGateway)
@@ -18,7 +48,8 @@ CloudFormation do
 
   Subnet(:Subnet) do
     VpcId Ref(:VPC)
-    CidrBlock '10.0.0.0/24'
+    CidrBlock subnet_cidr_block
+    MapPublicIpOnLaunch true
   end
 
   RouteTable(:RouteTable) do
@@ -50,36 +81,40 @@ CloudFormation do
     RuleNumber 100
   end
 
-  NetworkAclEntry(:InboundSshNetworkAclEntry) do
-    NetworkAclId Ref(:NetworkAcl)
-    CidrBlock '0.0.0.0/0'
-    Egress false
-    Protocol 6
-    RuleAction 'allow'
-    RuleNumber 101
-
-    PortRange({
-      From: 22,
-      To:   22
-    })
-  end
-
   SubnetNetworkAclAssociation(:SubnetNetworkAclAssociation) do
     SubnetId Ref(:Subnet)
     NetworkAclId Ref(:NetworkAcl)
   end
 
-  EC2_SecurityGroup(:SshSecurityGroup) do
-    VpcId Ref(:VPC)
-    GroupDescription 'ssh'
-    SecurityGroupIngress [
-      {
-        CidrIp:     '0.0.0.0/0',
-        IpProtocol: 'tcp',
-        FromPort:   22,
-        ToPort:     22
-      }
-    ]
-  end
+  port_security.each{|port_name, port_info|
+    NetworkAclEntry(:"Inbound#{port_name.to_s.camelcase(:upper)}NetworkAclEntry") do
+      NetworkAclId Ref(:NetworkAcl)
+      CidrBlock port_info[:cidr_block]
+      Egress false
+      Protocol protocol_number(port_info[:protocol])
+      RuleAction 'allow'
+      RuleNumber port_security.keys.find_index(port_name) + 100 + 1
+
+      PortRange({
+        From: port_info[:port_range][:from],
+        To:   port_info[:port_range][:to]
+      })
+    end
+
+    EC2_SecurityGroup(:"#{port_name.to_s.camelcase(:upper)}SecurityGroup") do
+      GroupName port_name
+      GroupDescription port_name.to_s
+      VpcId Ref(:VPC)
+      SecurityGroupIngress [
+        {
+          CidrIp:     port_info[:cidr_block],
+          IpProtocol: port_info[:protocol],
+          FromPort:   port_info[:port_range][:from],
+          ToPort:     port_info[:port_range][:to]
+        }
+      ]
+    end
+
+  }
 
 end
