@@ -1,0 +1,45 @@
+
+Vagrant::Project.configure(:workspace) do |env|
+  osx_workspace :osx_workspace do
+
+    provider {
+      gui true
+
+      sync_vagrant_folder false
+
+      network{
+        ip_address "10.4.3.21"
+      }
+
+      synced_folders{
+        host_path  File.expand_path(File.dirname(__FILE__))
+        guest_path '/vagrant'
+        type :nfs
+      }
+
+      synced_folders{
+        host_path  '/Users/jflowers/Projects/github/jflowers/faro'
+        guest_path '/Users/vagrant/Projects/github/jflowers/faro'
+        create true
+        type :nfs
+      }
+
+      synced_folders{
+        host_path  '/Users/jflowers/Projects/github/jflowers/pemba'
+        guest_path '/Users/vagrant/Projects/github/jflowers/pemba'
+        create true
+        type :nfs
+      }
+
+      vagrant_machine.trigger.after :up do
+        command = %^
+sudo su <<-'ENDCOMMANDS'
+  find /Users/vagrant ! -user vagrant -exec chown vagrant:vagrant '{}' \\;
+ENDCOMMANDS
+^
+        run_remote command
+      end
+
+    }
+  end
+end
