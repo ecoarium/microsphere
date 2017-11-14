@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: microsphere_dev
+# Cookbook Name:: workspace
 # Recipe:: packer
 #
 
