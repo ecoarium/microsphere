@@ -7,4 +7,5 @@ version          '1.0.0'
 
 depends 'chef_commons'
 depends 'virtualbox'
+depends 'atom-organism'
 depends 'ark'
