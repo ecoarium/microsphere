@@ -16,7 +16,11 @@ CfnDsl::RakeTask.new('cfndsl_generate_template') do |t|
   }
 end
 
-task :cfndsl_outputs do
+task :cfndsl_resources do
+  generate_cfndsl_report
+end
+
+def generate_cfndsl_report
   name = CfndslExt::Tagging.generate_name
   stack = CfndslExt::CloudFormation::Stack.new(
     name,
@@ -27,7 +31,18 @@ task :cfndsl_outputs do
     }
   )
 
-  puts stack.outputs.pretty_inspect
+  report_file_path = "#{$WORKSPACE_SETTINGS[:paths][:project][:deploy][:cfndsl][:state]}/report.json"
+
+  if stack.exists?
+    json_report = JSON.pretty_generate stack.resources
+
+    File.open(report_file_path,"w") {|file|
+      file.write(json_report)
+    }
+  else
+    FileUtils.rm_f report_file_path if File.exist?(report_file_path)
+    raise "the stack #{name} does not exist"
+  end
 end
 
 desc "destroy cfn stack"
@@ -45,6 +60,7 @@ task :cfndsl_destroy do
 
   if stack.exists?
     stack.delete
+    FileUtils.rm_f "#{$WORKSPACE_SETTINGS[:paths][:project][:deploy][:cfndsl][:state]}/report.json"
   else
     raise "the stack #{name} does not exist"
   end
@@ -76,6 +92,7 @@ task :cfndsl_deploy => [:cfndsl_generate_template] do
       )
     end
 
+    generate_cfndsl_report
 end
 
 def credentials

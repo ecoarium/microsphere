@@ -16,8 +16,12 @@ module Vagrant
             machine.provider.set_defaults
 
             machine.provider.configuration.with{
-              ami 'ami-38078c2e' if ami.nil?
-              subnet_id '' if subnet_id.nil?
+              ami 'ami-f3614d96' if ami.nil?
+
+              if subnet_id.nil?
+                subnet_id $WORKSPACE_SETTINGS[:aws_resources_report][:aws][:ec2][:subnet].first[:physical_resource_id]
+              end
+
               tags set_tags(machine.name)
             }
 

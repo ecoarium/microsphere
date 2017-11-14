@@ -2,16 +2,24 @@
 Vagrant::Project.configure(:aws) do |env|
   blank :play do
     provider{
-      vagrant_machine.vm.guest = :windows
+      ssh_username 'centos'
 
       region 'us-east-2'
 
-      ami 'ami-a2eac8c7'
       instance_type 't2.large'
-
-      subnet_id 'subnet-784bbf11'
-      security_groups 'rdp'
-      security_groups 'winrm'
     }
   end
+
+  # yum :yum do
+  #   provider{
+  #     ssh_username 'centos'
+  #
+  #     region 'us-east-2'
+  #
+  #     ami 'ami-f3614d96'
+  #     instance_type 't2.large'
+  #
+  #     subnet_id 'subnet-ffa38284'
+  #   }
+  # end
 end
