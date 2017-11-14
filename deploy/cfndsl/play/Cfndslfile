@@ -101,7 +101,7 @@ CloudFormation do
       })
     end
 
-    EC2_SecurityGroup(:"#{port_name.to_s.camelcase(:upper)}SecurityGroup") do
+    EC2_SecurityGroup(port_name) do
       GroupName port_name
       GroupDescription port_name.to_s
       VpcId Ref(:VPC)
