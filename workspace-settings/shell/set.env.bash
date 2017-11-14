@@ -76,12 +76,12 @@ function resign_as_data_bag_manager(){
 }
 
 function become_ecoarium_cookbook_developer(){
-  become_github_manager
+  # become_github_manager
   export HATS=$HATS:ecoarium-cookbooks
 }
 
 function resign_as_ecoarium_cookbook_developer(){
-  resign_from_github_management
+  # resign_from_github_management
   export HATS=${HATS/:ecoarium-cookbooks/}
 }
 
