@@ -1,7 +1,7 @@
 require 'erb'
 require 'shell-helper'
 require 'git'
-require 'github'
+#require 'github'
 require 'terminal-helper/ask'
 
 desc "create new cookbook"
@@ -127,6 +127,14 @@ end
 def publish_cookbook(cookbook_name)
   cookbook_path = File.expand_path("github/ecoarium-cookbooks/#{cookbook_name}", $WORKSPACE_SETTINGS[:paths][:projects][:root])
   version = write_version_to_meta_data_file(cookbook_path, version)
+
+  debug{
+    "publish_cookbook(#{cookbook_name})
+    #{version}
+    #{cookbook_path}
+    "
+  }
+
   Dir.chdir(cookbook_path){
     [
       'git pull',
