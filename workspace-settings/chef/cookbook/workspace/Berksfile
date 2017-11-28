@@ -2,11 +2,12 @@ load_berks_file($WORKSPACE_SETTINGS[:ecosystem][:chef][:berksfile])
 
 ecoarium_cookbook 'virtualbox', '0.8.11'
 ecoarium_cookbook 'chef_commons', '1.1.20'
-ecoarium_cookbook 'atom-organism', '0.1.5'
+ecoarium_cookbook 'atom-organism', '0.1.6'
 ecoarium_cookbook 'atom', '0.2.42'
 ecoarium_cookbook 'homebrew', '4.2.243'
 ecoarium_cookbook 'kube-organism', '0.1.4'
 ecoarium_cookbook 'kube', '0.1.4'
+ecoarium_cookbook 'darwin', '0.1.1'
 
 cookbook 'build-essential'
 cookbook 'ark'

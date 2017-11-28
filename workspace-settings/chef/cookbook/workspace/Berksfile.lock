@@ -6,13 +6,17 @@ DEPENDENCIES
     tag: 0.2.42
   atom-organism
     git: https://github.com/ecoarium-cookbooks/atom-organism.git
-    revision: a41857043f4ba85516d1a24c9c6655237c47f215
-    tag: 0.1.5
+    revision: 06eb527244b6f84d94ee22390e5346ed2ef7ffc8
+    tag: 0.1.6
   build-essential
   chef_commons
     git: https://github.com/ecoarium-cookbooks/chef_commons.git
     revision: 5fbd63aa9707314b019c928d42443f2472b8590c
     tag: 1.1.20
+  darwin
+    git: https://github.com/ecoarium-cookbooks/darwin.git
+    revision: e160249191d69585b75f4895776dbe5c1214cd61
+    tag: 0.1.1
   homebrew
     git: https://github.com/ecoarium-cookbooks/homebrew.git
     revision: d36bee846ea05427a4e570cac4fbdbdde083f14f
@@ -39,13 +43,14 @@ GRAPH
   atom (0.2.42)
     apt (>= 0.0.0)
     homebrew (>= 0.0.0)
-  atom-organism (0.1.5)
+  atom-organism (0.1.6)
     atom (>= 0.0.0)
   build-essential (8.0.3)
     mingw (>= 1.1)
     seven_zip (>= 0.0.0)
   chef_commons (1.1.20)
     ark (>= 0.0.0)
+  darwin (0.1.1)
   dmg (4.1.0)
   homebrew (4.2.243)
   kube (0.1.4)
