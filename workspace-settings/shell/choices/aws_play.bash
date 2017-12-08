@@ -13,6 +13,8 @@ function set_workspace_settings_to_aws_play() {
   export VAGRANT_DEFAULT_PROVIDER=aws
   export VAGRANT_CONTEXT="${VAGRANT_DEFAULT_PROVIDER}/play"
 
+  export AWS_REGION=us-west-1
+
   export TEST_TYPES=acceptance
   export HATS=aws_play:cfndsl
 }

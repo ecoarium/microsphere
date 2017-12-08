@@ -25,7 +25,7 @@ def generate_cfndsl_report
   stack = CfndslExt::CloudFormation::Stack.new(
     name,
     {
-      region: 'us-east-2',
+      region: $WORKSPACE_SETTINGS[:aws][:region],
       access_key_id: credentials[:key],
       secret_access_key: credentials[:secret]
     }
@@ -52,7 +52,7 @@ task :cfndsl_destroy do
   stack = CfndslExt::CloudFormation::Stack.new(
     name,
     {
-      region: 'us-east-2',
+      region: $WORKSPACE_SETTINGS[:aws][:region],
       access_key_id: credentials[:key],
       secret_access_key: credentials[:secret]
     }
@@ -74,7 +74,7 @@ task :cfndsl_deploy => [:cfndsl_generate_template] do
     stack = CfndslExt::CloudFormation::Stack.new(
       name,
       {
-        region: 'us-east-2',
+        region: $WORKSPACE_SETTINGS[:aws][:region],
         access_key_id: credentials[:key],
         secret_access_key: credentials[:secret]
       }

@@ -4,9 +4,7 @@ Vagrant::Project.configure(:aws) do |env|
     provider{
       ssh_username 'centos'
 
-      region 'us-east-2'
-
-      instance_type 't2.large'
+      instance_type 't2.micro'
     }
   end
 
@@ -14,12 +12,7 @@ Vagrant::Project.configure(:aws) do |env|
   #   provider{
   #     ssh_username 'centos'
   #
-  #     region 'us-east-2'
-  #
-  #     ami 'ami-f3614d96'
   #     instance_type 't2.large'
-  #
-  #     subnet_id 'subnet-ffa38284'
   #   }
   # end
 end

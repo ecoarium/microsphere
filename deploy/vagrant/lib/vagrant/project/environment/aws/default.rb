@@ -16,9 +16,10 @@ module Vagrant
             machine.provider.set_defaults
 
             machine.provider.configuration.with{
-              ami 'ami-f3614d96' if ami.nil?
+              region $WORKSPACE_SETTINGS[:aws][:region]
+              ami 'ami-73323713' if ami.nil?
 
-              if subnet_id.nil?
+              if subnet_id.nil? and !$WORKSPACE_SETTINGS[:aws_resources_report].nil? and !$WORKSPACE_SETTINGS[:aws_resources_report][:aws].nil?
                 subnet_id $WORKSPACE_SETTINGS[:aws_resources_report][:aws][:ec2][:subnet].first[:physical_resource_id]
               end
 

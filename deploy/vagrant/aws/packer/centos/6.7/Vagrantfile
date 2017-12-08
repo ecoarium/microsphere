@@ -5,23 +5,10 @@ Packer::BaselineCreator.new.process_template
 Vagrant::Project.configure(:aws) do |env|
   blank :"#{$WORKSPACE_SETTINGS[:packer][:context].gsub(/\//, '-')}" do
     provider{
-      region 'us-east-2'
+      ssh_username 'centos'
 
       ami $WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:aws][:ami]
       instance_type 't2.micro'
-
-      subnet_id 'subnet-784bbf11'
-    }
-  end
-
-  blank :"example" do
-    provider{
-      region 'us-east-2'
-
-      ami $WORKSPACE_SETTINGS[:paths][:project][:deploy][:packer][:aws][:ami]
-      instance_type 't2.micro'
-
-      subnet_id 'subnet-784bbf11'
     }
   end
 end

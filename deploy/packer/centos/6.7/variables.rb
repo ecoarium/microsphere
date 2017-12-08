@@ -1,6 +1,6 @@
 
 ####################### BEGIN GENERATED CONTENT DONT CHANGE #######################
-# [c2f3953cddbc42b25a7cbf4e282d60fe]
+# [b927700ab4eec90401af5b6c8c0c7c85]
 ######################## END GENERATED CONTENT DONT CHANGE ########################
 
 # Any string value of 'null' below must be set to a new value.
@@ -10,6 +10,28 @@ require 'curl'
 require 'digest/md5'
 require 'open-uri'
 require 'git'
+
+aws_region $WORKSPACE_SETTINGS[:aws][:region]
+
+# https://wiki.centos.org/Cloud/AWS
+amis = {
+  "ap-northeast-1" => "ami-f61c3e91",
+  "ap-northeast-2" => "ami-fecb1990",
+  "ap-south-1" => "ami-e6f48789",
+  "ap-southeast-1" => "ami-4d348a2e",
+  "ap-southeast-2" => "ami-7a959b19",
+  "ca-central-1" => "ami-00e45864",
+  "eu-central-1" => "ami-11a2707e",
+  "eu-west-1" => "ami-8f043ee9",
+  "eu-west-2" => "ami-bf2c38db",
+  "sa-east-1" => "ami-19492b75",
+  "us-east-1" => "ami-500d8546",
+  "us-east-2" => "ami-7dbe9a18",
+  "us-west-1" => "ami-252a0f45",
+  "us-west-2" => "ami-112cbc71",
+}
+
+aws_ami amis[$WORKSPACE_SETTINGS[:aws][:region]]
 
 access_key Vagrant::Project::Provider::Amazon::Helper.get_aws_credential['aws_access_key_id']
 secret_key Vagrant::Project::Provider::Amazon::Helper.get_aws_credential['aws_secret_access_key']

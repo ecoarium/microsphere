@@ -4,8 +4,8 @@
       "type": "amazon-ebs",
       "access_key": "{{user `access_key`}}",
       "secret_key": "{{user `secret_key`}}",
-      "region": "us-east-2",
-      "source_ami": "ami-7dbe9a18",
+      "region": "{{user `aws_region`}}",
+      "source_ami": "{{user `aws_ami`}}",
       "instance_type": "t2.micro",
       "ssh_username": "centos",
       "ami_name": "{{user `vm_short_name`}}-{{user `artifact_version`}}"
@@ -43,6 +43,8 @@
     "box_output_directory": null,
     "output_directory": null,
     "access_key": null,
-    "secret_key": null
+    "secret_key": null,
+    "aws_region": null,
+    "aws_ami": null
   }
 }
