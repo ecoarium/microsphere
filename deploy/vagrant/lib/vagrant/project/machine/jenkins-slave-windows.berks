@@ -1,12 +1,12 @@
 
 cookbook_from_github 'jflowers', 'jenkins_microsphere', '0.1.56'
 
-middle_way_cookbook 'java-osx', '0.1.1'
-middle_way_cookbook 'java-windows', '1.0.3'
-middle_way_cookbook 'chef_commons', '1.1.20'
-middle_way_cookbook 'ec2', '1.0.1'
-middle_way_cookbook 'format', '1.0.6'
-middle_way_cookbook 'aws', '0.100.2'
+ecoarium_cookbook 'java-osx', '0.1.1'
+ecoarium_cookbook 'java-windows', '1.0.3'
+ecoarium_cookbook 'chef_commons', '1.1.20'
+ecoarium_cookbook 'ec2', '1.0.1'
+ecoarium_cookbook 'format', '1.0.6'
+ecoarium_cookbook 'aws', '0.100.2'
 
 cookbook 'build-essential', '2.3.1'
 cookbook 'windows', '< 3.0.0'

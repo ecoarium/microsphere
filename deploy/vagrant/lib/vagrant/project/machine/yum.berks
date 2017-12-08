@@ -1,11 +1,11 @@
 
 
 cookbook_from_github 'jflowers', 'yum_mirror_microsphere', '0.1.1'
-middle_way_cookbook 'yum_mirror', '1.0.9'
+ecoarium_cookbook 'yum_mirror', '1.0.9'
 
-middle_way_cookbook 'chef_commons', '1.1.9'
-middle_way_cookbook 'ec2', '1.0.2'
-middle_way_cookbook 'format', '1.0.1'
-middle_way_cookbook 'aws', '0.100.2'
+ecoarium_cookbook 'chef_commons', '1.1.9'
+ecoarium_cookbook 'ec2', '1.0.2'
+ecoarium_cookbook 'format', '1.0.1'
+ecoarium_cookbook 'aws', '0.100.2'
 
 cookbook 'apache2', '~> 3.2.2'

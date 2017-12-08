@@ -1,10 +1,10 @@
 
 cookbook_from_github 'jflowers',  'nexus_microsphere', '1.1.3'
-middle_way_cookbook 'nexus', '1.1.1'
+ecoarium_cookbook 'nexus', '1.1.1'
 
-middle_way_cookbook 'chef_commons', '1.1.13'
-middle_way_cookbook 'ec2', '1.0.1'
-middle_way_cookbook 'format', '1.0.1'
-middle_way_cookbook 'aws', '0.100.2'
+ecoarium_cookbook 'chef_commons', '1.1.13'
+ecoarium_cookbook 'ec2', '1.0.1'
+ecoarium_cookbook 'format', '1.0.1'
+ecoarium_cookbook 'aws', '0.100.2'
 
 cookbook 'build-essential', '2.3.1'

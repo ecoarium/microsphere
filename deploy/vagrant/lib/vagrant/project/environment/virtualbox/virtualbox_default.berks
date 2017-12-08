@@ -2,7 +2,7 @@
 cookbook 'timezone-ii'
 cookbook 'ntp'
 
-middle_way_cookbook 'virtualbox', '0.8.11'
-middle_way_cookbook 'chef_commons', '1.1.16'
-middle_way_cookbook 'dev_commons', '1.0.5'
-middle_way_cookbook 'yum_mirror', '1.0.4'
+ecoarium_cookbook 'virtualbox', '0.8.11'
+ecoarium_cookbook 'chef_commons', '1.1.16'
+ecoarium_cookbook 'dev_commons', '1.0.5'
+ecoarium_cookbook 'yum_mirror', '1.0.4'
